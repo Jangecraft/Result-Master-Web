@@ -76,26 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
     answerInput.value = ""; // รีเซ็ตช่อง Input
   });
 
-  function colorizeBrackets(expression) {
-    const colors = ["red", "blue", "green", "purple"];
-    let colorIndex = 0;
-    let depth = 0;
-
-    return expression.replace(/[()]/g, (bracket) => {
-      if (bracket === "(") {
-        depth++;
-        colorIndex = (depth - 1) % colors.length;
-        return `<span style="color: ${colors[colorIndex]}">${bracket}</span>`;
-      } else if (bracket === ")") {
-        const coloredBracket = `<span style="color: ${
-          colors[(depth - 1) % colors.length]
-        }">${bracket}</span>`;
-        depth--;
-        return coloredBracket;
-      }
-    });
-  }
-
   function getAnswer(start, operator, value) {
     if (operator === "=") start = value;
     else if (operator === "+") start += value;
@@ -212,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
       question += generateComplexity(A, getRandomInt(5, 6), mode);
     }
 
-    resultDiv.innerHTML = colorizeBrackets(question + `<br>printf("%d", A);`);
+    resultDiv.innerHTML = question;
     totalQuestions++;
     updateScore();
   }
