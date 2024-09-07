@@ -65,10 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (userAnswer === Answer) {
       correctAnswers++;
-      resultDiv.innerHTML += `<br><span class="text-success">ถูกต้อง! คำตอบคือ ${Answer}</span>`;
+      resultDiv.innerHTML += `<br><span class="text-success">${userAnswer} ถูกต้อง! คำตอบคือ ${Answer}</span>`;
     } else {
       incorrectAnswers++;
-      resultDiv.innerHTML += `<br><span class="text-danger">ผิด! คำตอบที่ถูกต้องคือ ${Answer}</span>`;
+      resultDiv.innerHTML += `<br><span class="text-danger">${userAnswer} ผิด! คำตอบที่ถูกต้องคือ ${Answer}</span>`;
     }
     updateScore();
 
