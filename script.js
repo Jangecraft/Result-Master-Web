@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     stopGame = true;
 
-    if (userAnswer === Answer) {
+    if (userAnswer == Answer) {
       correctAnswers++;
       resultDiv.innerHTML += `<br><span class="text-success">${userAnswer} ถูกต้อง! คำตอบคือ ${Answer}</span>`;
     } else {
