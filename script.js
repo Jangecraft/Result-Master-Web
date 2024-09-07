@@ -245,4 +245,11 @@ document.addEventListener("DOMContentLoaded", function () {
     incorrectProgressBar.textContent = `${Math.round(incorrectPercentage)}%`;
     totalQuestions++;
   }
+
+  function changeModeSelect() {
+    resetGame();
+    generateQuestion();
+  }
+
+  modeSelect.addEventListener("change", changeModeSelect);
 });
