@@ -25,15 +25,14 @@ document.addEventListener("DOMContentLoaded", function () {
   let stopGame = false;
 
   resetBtn.addEventListener("click", () => {
-    if (!stopGame){
-      // reset คะแนนกลับเป็นค่าเริ่มต้น
-      resetGame();
+    if (!stopGame) {
+      resetGame(); // reset คะแนนกลับเป็นค่าเริ่มต้น
     }
-    // เปลี่ยนชื่อปุ่มคืนเป็น Reset
+    stopGame = false;
+    resultDiv.innerHTML = "";
     resetBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Reset';
     resetBtn.className = "container-fluid btn btn-secondary btn-lg";
-    // สุ่มคำถามขึ้นมาใหม่
-    generateQuestion();
+    generateQuestion(); // สุ่มคำถามขึ้นมาใหม่
   });
 
   function resetGame() {
@@ -47,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   submitBtn.addEventListener("click", () => {
     if (totalQuestions <= 0) {
-      return
+      return;
     }
 
     const userAnswer = answerInput.value.trim();
@@ -72,14 +71,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     updateScore();
 
-    // เปลี่ยนชื่อปุ่มเป็นปุ่ม Next ชั่วคราว
     resetBtn.innerHTML = '<i class="fa-solid fa-forward"></i> Next';
     resetBtn.className = "container-fluid btn btn-warning btn-lg";
-
     answerInput.value = ""; // รีเซ็ตช่อง Input
   });
 
-  // ฟังก์ชันใส่สีให้กับวงเล็บ
   function colorizeBrackets(expression) {
     const colors = ["red", "blue", "green", "purple"];
     let colorIndex = 0;
@@ -91,30 +87,132 @@ document.addEventListener("DOMContentLoaded", function () {
         colorIndex = (depth - 1) % colors.length;
         return `<span style="color: ${colors[colorIndex]}">${bracket}</span>`;
       } else if (bracket === ")") {
-        const coloredBracket = `<span style="color: ${colors[(depth - 1) % colors.length]}">${bracket}</span>`;
+        const coloredBracket = `<span style="color: ${
+          colors[(depth - 1) % colors.length]
+        }">${bracket}</span>`;
         depth--;
         return coloredBracket;
       }
     });
   }
 
+  function getAnswer(start, operator, value) {
+    if (operator === "=") start = value;
+    else if (operator === "+") start += value;
+    else if (operator === "+=") start += value;
+    else if (operator === "-") start -= value;
+    else if (operator === "-=") start -= value;
+    else if (operator === "*") start *= value;
+    else if (operator === "*=") start *= value;
+    else if (operator === "/")
+      start = Math.floor(start / value); // หารให้ได้จำนวนเต็ม
+    else if (operator === "/=")
+      start = Math.floor(start / value); // หารให้ได้จำนวนเต็ม
+    else if (operator === "%") start %= value;
+    else if (operator === "%=") start %= value;
+    else if (operator === "++") start++;
+    else if (operator === "--") start--;
+    return start;
+  }
+
+  function generateComplexity(start, level, mode) {
+    const normal_operator = ["=", "+", "-", "*", "/", "%"];
+    const extra_operator = [
+      ...normal_operator,
+      "+=",
+      "-=",
+      "*=",
+      "/=",
+      "%=",
+      "++",
+      "--",
+    ];
+    let question = "";
+    let randomOperator = ""; // กำหนดให้ตัวแปรนี้อยู่ภายนอก
+
+    if (level < 2) {
+      level = 2;
+    }
+
+    for (let i = 0; i < level; i++) {
+      question += "<br>";
+      let text = "";
+      if (mode === "basic") {
+        randomOperator =
+          normal_operator[Math.floor(Math.random() * normal_operator.length)];
+      } else {
+        randomOperator =
+          extra_operator[Math.floor(Math.random() * extra_operator.length)];
+      }
+      let randomValue = getRandomInt(1, 10);
+
+      if (normal_operator.includes(randomOperator)) {
+        if (randomOperator === "=") {
+          start = getAnswer(start, randomOperator, randomValue);
+          text += `A ${randomOperator} ${randomValue};`;
+        } else if (randomOperator === "/") {
+          if (start % 2 == 0 && start != 0) {
+            randomValue = 2;
+            start = getAnswer(start, randomOperator, randomValue);
+            text += `A = A ${randomOperator} ${randomValue};`;
+          } else {
+            // เปลี่ยนวิธีคิดเผื่อไม่ให้หารเป็นเศษ
+            start = getAnswer(start, "=", randomValue);
+            text += `A = ${randomValue};`;
+          }
+        } else if (randomOperator === "%") {
+          randomValue = 2;
+          start = getAnswer(start, randomOperator, randomValue);
+          text += `A = A ${randomOperator} ${randomValue};`;
+        } else {
+          start = getAnswer(start, randomOperator, randomValue);
+          text += `A = A ${randomOperator} ${randomValue};`;
+        }
+      } else {
+        if (randomOperator === "++" || randomOperator === "--") {
+          start = getAnswer(start, randomOperator, 0);
+          text += `A${randomOperator};`;
+        } else if (randomOperator === "/=") {
+          if (start % 2 == 0 && start != 0) {
+            randomValue = 2;
+            start = getAnswer(start, randomOperator, randomValue);
+            text += `A ${randomOperator} ${randomValue};`;
+          } else {
+            // เปลี่ยนวิธีคิดเผื่อไม่ให้หารเป็นเศษ
+            start = getAnswer(start, "=", randomValue);
+            text += `A = ${randomValue};`;
+          }
+        } else if (randomOperator === "%=") {
+          randomValue = 2;
+          start = getAnswer(start, randomOperator, randomValue);
+          text += `A ${randomOperator} ${randomValue};`;
+        } else {
+          start = getAnswer(start, randomOperator, randomValue);
+          text += `A ${randomOperator} ${randomValue};`;
+        }
+      }
+
+      question += text;
+    }
+    Answer = start;
+    return question;
+  }
+
   function generateQuestion() {
     stopGame = false;
     const mode = modeSelect.value;
-    let question = "";
+    let A = getRandomInt(0, 10);
+    let question = `int A = ${A};`;
 
     if (mode === "basic") {
-      question = "int A = 70;<br>A = 60;<br>A เป็นเท่าไหร่?";
-      Answer = 60;
+      question += generateComplexity(A, getRandomInt(1, 2), mode);
     } else if (mode === "intermediate") {
-      question = "int B = 10;<br>B += 5;<br>B เป็นเท่าไหร่?";
-      Answer = 15;
+      question += generateComplexity(A, getRandomInt(3, 4), mode);
     } else if (mode === "advanced") {
-      question = "int C = 20;<br>C = (C > 10) ? 30 : 40;<br>C เป็นเท่าไหร่?";
-      Answer = 30;
+      question += generateComplexity(A, getRandomInt(5, 6), mode);
     }
 
-    resultDiv.innerHTML = colorizeBrackets(question);
+    resultDiv.innerHTML = colorizeBrackets(question + `<br>printf("%d", A);`);
     totalQuestions++;
     updateScore();
   }
@@ -145,7 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
     incorrectProgressBar.style.width = `${incorrectPercentage}%`;
     incorrectProgressBar.setAttribute("aria-valuenow", incorrectPercentage);
     incorrectProgressBar.textContent = `${Math.round(incorrectPercentage)}%`;
-
     totalQuestions++;
   }
 });
