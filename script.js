@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const submitBtn = document.getElementById("submit-btn");
   const resetBtn = document.getElementById("reset-btn");
   const resultDiv = document.getElementById("result");
+  const answerDiv = document.getElementById("answer");
   const modeSelect = document.getElementById("mode-select");
   const answerInput = document.getElementById("answer-input");
   const totalQuestionsEl = document.getElementById("total-questions");
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     stopGame = false;
     resultDiv.innerHTML = "";
+    answerDiv.innerHTML = "???";
     resetBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Reset';
     resetBtn.className = "container-fluid btn btn-secondary btn-lg";
     generateQuestion(); // สุ่มคำถามขึ้นมาใหม่
@@ -51,12 +53,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const userAnswer = answerInput.value.trim();
     if (userAnswer === "") {
-      alert("กรุณากรอกคำตอบ");
+      answerDiv.innerHTML = `<span class="text-danger">กรุณากรอกคำตอบ</span>`;
       return;
     }
 
     if (isNaN(parseInt(userAnswer))) {
-      alert("คำตอบต้องเป็นตัวเลขเท่านั้น");
+      answerDiv.innerHTML = `<span class="text-danger">คำตอบต้องเป็นตัวเลขเท่านั้น</span>`;
       return;
     }
 
@@ -64,11 +66,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (Number(userAnswer) === Number(Answer)) {
       correctAnswers++;
-      resultDiv.innerHTML += `<br><span class="text-success">ถูกต้อง! คำตอบคือ ${Answer}</span>`;
+      answerDiv.innerHTML = `<span class="text-success">ถูกต้อง! คำตอบคือ ${Answer}</span>`;
     } else {
       incorrectAnswers++;
-      resultDiv.innerHTML += `<br><span class="text-danger">ผิด! คำตอบที่ถูกต้องคือ ${Answer}</span>`;
+      answerDiv.innerHTML = `<span class="text-danger">ผิด! คำตอบที่ถูกต้องคือ ${Answer}</span>`;
     }
+    
     updateScore();
 
     resetBtn.innerHTML = '<i class="fa-solid fa-forward"></i> Next';
@@ -107,6 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "++",
       "--",
     ];
+    const Decoy_operator = [...extra_operator, " == ", " != ", " >= ", " <= "];
     let question = "";
     let randomOperator = ""; // กำหนดให้ตัวแปรนี้อยู่ภายนอก
 
@@ -118,11 +122,21 @@ document.addEventListener("DOMContentLoaded", function () {
       question += "<br>";
       let text = "";
       if (mode === "basic") {
-        randomOperator =
-          normal_operator[Math.floor(Math.random() * normal_operator.length)];
+        if (getRandomFloat(0, 1, 2) >= 0.8) {
+          randomOperator =
+            normal_operator[Math.floor(Math.random() * normal_operator.length)];
+        } else {
+          randomOperator =
+            extra_operator[Math.floor(Math.random() * extra_operator.length)];
+        }
       } else {
-        randomOperator =
-          extra_operator[Math.floor(Math.random() * extra_operator.length)];
+        if (getRandomFloat(0, 1, 2) >= 0.5) {
+          randomOperator =
+            extra_operator[Math.floor(Math.random() * extra_operator.length)];
+        } else {
+          randomOperator =
+            Decoy_operator[Math.floor(Math.random() * Decoy_operator.length)];
+        }
       }
       let randomValue = getRandomInt(1, 10);
 

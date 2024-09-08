@@ -45,6 +45,22 @@ body {
     padding: 0.5rem 1rem; /* ปรับช่องว่างภายในเพื่อให้เหมาะสม */
 }
 
+#result, #answer {
+    font-size: 1.25rem;
+    background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    padding: 15px;
+    color: #333;
+    display: flex;
+    justify-content: center;  /* จัดให้อยู่ตรงกลางแนวนอน */
+    align-items: center;      /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    text-align: left;         /* ทำให้ข้อความจัดชิดซ้าย */
+}
+
+#result pre {
+    margin: 0;
+}
+
 .counter {
     font-size: 1.5rem;
     margin-top: 10px;
