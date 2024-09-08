@@ -201,9 +201,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (mode === "basic") {
       question += generateComplexity(A, getRandomInt(1, 2), mode);
     } else if (mode === "intermediate") {
-      question += generateComplexity(A, getRandomInt(3, 4), mode);
+      question += generateComplexity(A, getRandomInt(2, 3), mode);
     } else if (mode === "advanced") {
-      question += generateComplexity(A, getRandomInt(5, 6), mode);
+      question += generateComplexity(A, getRandomInt(3, 4), mode);
     }
 
     resultDiv.innerHTML = question;
