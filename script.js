@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "++",
       "--",
     ];
-    const Decoy_operator = [...extra_operator, " == ", " != ", " >= ", " <= "];
+    const Decoy_operator = [...extra_operator, "==", "!=", ">=", "<="];
     let question = "";
     let randomOperator = ""; // กำหนดให้ตัวแปรนี้อยู่ภายนอก
 
@@ -151,8 +151,14 @@ document.addEventListener("DOMContentLoaded", function () {
             text += `A = A ${randomOperator} ${randomValue};`;
           } else {
             // เปลี่ยนวิธีคิดเผื่อไม่ให้หารเป็นเศษ
-            start = getAnswer(start, "=", randomValue);
-            text += `A = ${randomValue};`;
+            if (mode === "basic" || getRandomFloat(0, 1, 2) >= 0.5){
+              // เปลี่ยนเป็นการกำหนดค่า
+              start = getAnswer(start, "=", randomValue);
+              text += `A = ${randomValue};`;
+            } else {
+              // เปลี่ยนเป็นตัวหลอก
+              text += `A == ${randomValue};`;
+            }
           }
         } else if (randomOperator === "%") {
           randomValue = 2;
@@ -173,8 +179,14 @@ document.addEventListener("DOMContentLoaded", function () {
             text += `A ${randomOperator} ${randomValue};`;
           } else {
             // เปลี่ยนวิธีคิดเผื่อไม่ให้หารเป็นเศษ
-            start = getAnswer(start, "=", randomValue);
-            text += `A = ${randomValue};`;
+            if (mode === "basic" || getRandomFloat(0, 1, 2) >= 0.5){
+              // เปลี่ยนเป็นการกำหนดค่า
+              start = getAnswer(start, "=", randomValue);
+              text += `A = ${randomValue};`;
+            } else {
+              // เปลี่ยนเป็นตัวหลอก
+              text += `A == ${randomValue};`;
+            }
           }
         } else if (randomOperator === "%=") {
           randomValue = 2;
