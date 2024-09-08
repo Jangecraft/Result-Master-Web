@@ -110,7 +110,8 @@ document.addEventListener("DOMContentLoaded", function () {
       "++",
       "--",
     ];
-    const Decoy_operator = [...extra_operator, "==", "!=", ">=", "<="];
+    const Decoy_operator = ["==", "!=", ">=", "<="];
+    const all_operator = [...extra_operator, ...Decoy_operator];
     let question = "";
     let randomOperator = ""; // กำหนดให้ตัวแปรนี้อยู่ภายนอก
 
@@ -135,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
             extra_operator[Math.floor(Math.random() * extra_operator.length)];
         } else {
           randomOperator =
-            Decoy_operator[Math.floor(Math.random() * Decoy_operator.length)];
+          all_operator[Math.floor(Math.random() * all_operator.length)];
         }
       }
       let randomValue = getRandomInt(1, 10);
@@ -157,7 +158,8 @@ document.addEventListener("DOMContentLoaded", function () {
               text += `A = ${randomValue};`;
             } else {
               // เปลี่ยนเป็นตัวหลอก
-              text += `A == ${randomValue};`;
+              randomOperator = Decoy_operator[Math.floor(Math.random() * Decoy_operator.length)];
+              text += `A ${randomOperator} ${randomValue};`;
             }
           }
         } else if (randomOperator === "%") {
@@ -185,7 +187,8 @@ document.addEventListener("DOMContentLoaded", function () {
               text += `A = ${randomValue};`;
             } else {
               // เปลี่ยนเป็นตัวหลอก
-              text += `A == ${randomValue};`;
+              randomOperator = Decoy_operator[Math.floor(Math.random() * Decoy_operator.length)];
+              text += `A ${randomOperator} ${randomValue};`;
             }
           }
         } else if (randomOperator === "%=") {
